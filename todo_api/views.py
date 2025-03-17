@@ -7,6 +7,7 @@ from rest_framework import viewsets
 from rest_framework import status
 from .models import Todo
 from .serializers import TodoSerializer
+
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User
@@ -33,7 +34,6 @@ class RegisterView(APIView):
             
         user = User.objects.create_user(username=username, password=password)
         token, created = Token.objects.get_or_create(user=user)
-        
         
         return Response({
             'token': token.key,
