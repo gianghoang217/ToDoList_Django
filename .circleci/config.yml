@@ -21,13 +21,13 @@ jobs:
       # Specify the version you desire here
       # See:https://circleci.com/developer/images/image/cimg/python
     - image: cimg/python:3.9
-        environment:
-          POSTGRES_DB: github_actions
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          DATABASE_HOST: localhost
-          DATABASE_PORT: 5432
-          DJANGO_SETTINGS_MODULE: todo_project.settings_test
+      environment:
+        POSTGRES_DB: github_actions
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        DATABASE_HOST: localhost
+        DATABASE_PORT: 5432
+        DJANGO_SETTINGS_MODULE: todo_project.settings_test
     
     - image: cimg/postgres:15.3
       environment:
