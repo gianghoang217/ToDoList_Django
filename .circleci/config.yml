@@ -20,19 +20,20 @@ jobs:
     docker:
       # Specify the version you desire here
       # See:https://circleci.com/developer/images/image/cimg/python
-      - image: cimg/python:3.9
+    - image: cimg/python:3.9
         environment:
           POSTGRES_DB: github_actions
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          DATABASE_HOST: postgres
+          DATABASE_HOST: localhost
           DATABASE_PORT: 5432
           DJANGO_SETTINGS_MODULE: todo_project.settings_test
-      - image: postgres:latest
-        environment:
-          POSTGRES_DB: github_actions
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+    
+    - image: cimg/postgres:15.3
+      environment:
+        POSTGRES_DB: github_actions
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
 
     # Add steps to the job
     # See: https://circleci.com/docs/jobs-steps/#steps-overview & https://circleci.com/docs/configuration-reference/#steps
@@ -41,24 +42,6 @@ jobs:
       - checkout
       - python/install-packages:
           pkg-manager: pip
-          # app-dir: ~/project/package-directory/  # If your requirements.txt isn't in the root directory.
-          # pip-dependency-file: test-requirements.txt  # if you have a different name for your requirements file, maybe one that combines your runtime and test requirements.
-      - run:
-          name: Debug PostgreSQL Logs
-          command: |
-            echo "Checking PostgreSQL logs...";
-            docker logs $(docker ps -q --filter ancestor=postgres:latest)
-      - run:
-          name: Wait for PostgreSQL
-          command: |
-            for i in {1..10}; do
-              if pg_isready -h postgres -p 5432; then
-                echo "PostgreSQL is ready!";
-                break;
-              fi
-              echo "Waiting for PostgreSQL...";
-              sleep 5;
-            done
       - run:
           name: Run tests
           # This assumes pytest is installed via the install-package step above
