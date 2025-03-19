@@ -25,9 +25,14 @@ jobs:
           POSTGRES_DB: github_actions
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          DATABASE_HOST: localhost
+          DATABASE_HOST: postgres
           DATABASE_PORT: 5432
           DJANGO_SETTINGS_MODULE: todo_project.settings_test
+      - image: postgres:latest
+        environment:
+          POSTGRES_DB: github_actions
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
 
     # Add steps to the job
     # See: https://circleci.com/docs/jobs-steps/#steps-overview & https://circleci.com/docs/configuration-reference/#steps
@@ -38,6 +43,13 @@ jobs:
           pkg-manager: pip
           # app-dir: ~/project/package-directory/  # If your requirements.txt isn't in the root directory.
           # pip-dependency-file: test-requirements.txt  # if you have a different name for your requirements file, maybe one that combines your runtime and test requirements.
+      - run:
+          name: Wait for PostgreSQL
+          command: |
+            until pg_isready -h postgres -p 5432; do
+              echo "Waiting for PostgreSQL...";
+              sleep 2;
+            done
       - run:
           name: Run tests
           # This assumes pytest is installed via the install-package step above
